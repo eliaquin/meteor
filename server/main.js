@@ -4,7 +4,7 @@ import {Players} from './../imports/api/players';
 Meteor.startup(() => {
 
     class Person{
-        constructor(name, age = 0){
+        constructor(name = "Anónimo", age = 0){
             this.name = name;
             this.age = age;
         }
@@ -25,19 +25,33 @@ Meteor.startup(() => {
             this.title = title;
         }
         hasJob(){
-            return false; //1er. convierte undefined en bool, el segundo lo hace falso
+            return !!this.title; //1er. convierte undefined en bool, el segundo lo hace falso
+        }
+
+        getGreeting(){
+            if(this.title){
+                return `Hi! i am ${this.name}. I work as a ${this.title}.`
+            } else{
+                return super.getGreeting();
+            }
         }
 
     }
 
-    let me = new Employee("Eliaquin", 40, 'db admin');
-    console.log(me.getGreeting());
-    console.log(me.getPersonDescription());
+    class Programmer extends Person{
+        constructor(name, age, preferredLanguage = "C#"){
+            super(name, age);
+            this.preferredLanguage = preferredLanguage;
+        }
 
-    let me = new Employee("Anny", 32);
-    console.log(me.getGreeting());
-    console.log(me.getPersonDescription());
-
-
-
+        getGreeting(){
+            if(this.preferredLanguage){
+                return `Hola. Me llamo ${this.name} y soy programador ${this.preferredLanguage}`;
+            } else{
+                return super.getGreeting();
+            }
+        }
+    }
+    let prog = new Programmer("Eliaquín", 40, "React");
+    console.log(prog.getGreeting());
 });
