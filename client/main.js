@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import {Meteor} from 'meteor/meteor';
 import {Tracker} from 'meteor/tracker';
 import {Players} from './../imports/api/players';
+import TitleBar from './../imports/ui/TitleBar';
+import AddPlayer from './../imports/ui/AddPlayer';
 
 const renderPlayers = (players) => players.map((x) => (
     <p key={x._id}>
@@ -13,32 +15,16 @@ const renderPlayers = (players) => players.map((x) => (
     </p>
 ));    
 
-const handleSubmit = (e) => {
-    let playerName = e.target.playerName.value;
-    e.preventDefault();
-
-    if(playerName === ''){
-        e.target.playerName.value = '';
-        return;
-    }
-
-    Players.insert({name: playerName, score: 0});
-    e.target.playerName.value = '';
-}
-
 Meteor.startup(() => {
         let nombre = "Eliaquin";
         Tracker.autorun(() => {
             let players = Players.find().fetch();
             let jsx = ( 
             <div>
-                <h1>Mi titulo</h1>
+                <TitleBar title="Score Keep"/>
                 <p> Esto viene de main.js.Saludos para {nombre} </p>
                 {renderPlayers(players)}
-                <form onSubmit={handleSubmit}>
-                    <input type="text" name="playerName" placeholder="Player name" />
-                    <button>Add Player</button>
-                </form>
+                <AddPlayer/>
             </div>
         );
         ReactDOM.render(jsx, document.getElementById("app"));
